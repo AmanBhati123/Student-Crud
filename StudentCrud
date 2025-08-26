@@ -1,0 +1,366 @@
+diff --git a/.classpath b/.classpath
+new file mode 100644
+index 0000000..7a9a105
+--- /dev/null
++++ b/.classpath
+@@ -0,0 +1,40 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<classpath>
++	<classpathentry kind="src" output="target/classes" path="src/main/java">
++		<attributes>
++			<attribute name="optional" value="true"/>
++			<attribute name="maven.pomderived" value="true"/>
++		</attributes>
++	</classpathentry>
++	<classpathentry excluding="**" kind="src" output="target/classes" path="src/main/resources">
++		<attributes>
++			<attribute name="maven.pomderived" value="true"/>
++			<attribute name="optional" value="true"/>
++		</attributes>
++	</classpathentry>
++	<classpathentry kind="src" output="target/test-classes" path="src/test/java">
++		<attributes>
++			<attribute name="optional" value="true"/>
++			<attribute name="maven.pomderived" value="true"/>
++			<attribute name="test" value="true"/>
++		</attributes>
++	</classpathentry>
++	<classpathentry excluding="**" kind="src" output="target/test-classes" path="src/test/resources">
++		<attributes>
++			<attribute name="maven.pomderived" value="true"/>
++			<attribute name="test" value="true"/>
++			<attribute name="optional" value="true"/>
++		</attributes>
++	</classpathentry>
++	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-17">
++		<attributes>
++			<attribute name="maven.pomderived" value="true"/>
++		</attributes>
++	</classpathentry>
++	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
++		<attributes>
++			<attribute name="maven.pomderived" value="true"/>
++		</attributes>
++	</classpathentry>
++	<classpathentry kind="output" path="target/classes"/>
++</classpath>
+diff --git a/.gitignore b/.gitignore
+new file mode 100644
+index 0000000..09e3bc9
+--- /dev/null
++++ b/.gitignore
+@@ -0,0 +1,2 @@
++/bin/
++/target/
+diff --git a/.project b/.project
+new file mode 100644
+index 0000000..4a0510a
+--- /dev/null
++++ b/.project
+@@ -0,0 +1,23 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<projectDescription>
++	<name>student-crud</name>
++	<comment></comment>
++	<projects>
++	</projects>
++	<buildSpec>
++		<buildCommand>
++			<name>org.eclipse.jdt.core.javabuilder</name>
++			<arguments>
++			</arguments>
++		</buildCommand>
++		<buildCommand>
++			<name>org.eclipse.m2e.core.maven2Builder</name>
++			<arguments>
++			</arguments>
++		</buildCommand>
++	</buildSpec>
++	<natures>
++		<nature>org.eclipse.jdt.core.javanature</nature>
++		<nature>org.eclipse.m2e.core.maven2Nature</nature>
++	</natures>
++</projectDescription>
+diff --git a/.settings/org.eclipse.core.resources.prefs b/.settings/org.eclipse.core.resources.prefs
+new file mode 100644
+index 0000000..abdea9a
+--- /dev/null
++++ b/.settings/org.eclipse.core.resources.prefs
+@@ -0,0 +1,4 @@
++eclipse.preferences.version=1
++encoding//src/main/java=UTF-8
++encoding//src/main/resources=UTF-8
++encoding/<project>=UTF-8
+diff --git a/.settings/org.eclipse.jdt.core.prefs b/.settings/org.eclipse.jdt.core.prefs
+new file mode 100644
+index 0000000..5e4ec05
+--- /dev/null
++++ b/.settings/org.eclipse.jdt.core.prefs
+@@ -0,0 +1,9 @@
++eclipse.preferences.version=1
++org.eclipse.jdt.core.compiler.codegen.methodParameters=generate
++org.eclipse.jdt.core.compiler.codegen.targetPlatform=17
++org.eclipse.jdt.core.compiler.compliance=17
++org.eclipse.jdt.core.compiler.problem.enablePreviewFeatures=disabled
++org.eclipse.jdt.core.compiler.problem.forbiddenReference=warning
++org.eclipse.jdt.core.compiler.problem.reportPreviewFeatures=ignore
++org.eclipse.jdt.core.compiler.release=enabled
++org.eclipse.jdt.core.compiler.source=17
+diff --git a/Dockerfile b/Dockerfile
+new file mode 100644
+index 0000000..e7b426f
+--- /dev/null
++++ b/Dockerfile
+@@ -0,0 +1,12 @@
++# Base image with Java 17 (use same JDK version as project)
++FROM openjdk:17-jdk-slim
++
++# Copy jar file into container
++ARG JAR_FILE=target/student-crud-0.0.1-SNAPSHOT.jar
++COPY ${JAR_FILE} app.jar
++
++# Expose port
++EXPOSE 8080
++
++# Run the application
++ENTRYPOINT ["java", "-jar", "/app.jar"]
+diff --git a/pom.xml b/pom.xml
+new file mode 100644
+index 0000000..9a70c21
+--- /dev/null
++++ b/pom.xml
+@@ -0,0 +1,54 @@
++<project xmlns="http://maven.apache.org/POM/4.0.0"
++         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
++         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
++    <modelVersion>4.0.0</modelVersion>
++    <groupId>com.example</groupId>
++    <artifactId>student-crud</artifactId>
++    <version>0.0.1-SNAPSHOT</version>
++    <packaging>jar</packaging>
++
++    <parent>
++        <groupId>org.springframework.boot</groupId>
++        <artifactId>spring-boot-starter-parent</artifactId>
++        <version>3.2.5</version>
++        <relativePath/> 
++    </parent>
++
++    <dependencies>
++        <dependency>
++            <groupId>org.springframework.boot</groupId>
++            <artifactId>spring-boot-starter-web</artifactId>
++        </dependency>
++        <dependency>
++            <groupId>org.springframework.boot</groupId>
++            <artifactId>spring-boot-starter-data-jpa</artifactId>
++        </dependency>
++        <dependency>
++			<groupId>org.springframework.boot</groupId>
++			<artifactId>spring-boot-devtools</artifactId>
++			<scope>runtime</scope>
++			<optional>true</optional>
++		</dependency>
++		<dependency>
++			<groupId>com.mysql</groupId>
++			<artifactId>mysql-connector-j</artifactId>
++			<scope>runtime</scope>
++		</dependency>
++         <!-- H2 Database -->
++    <dependency>
++        <groupId>com.h2database</groupId>
++        <artifactId>h2</artifactId>
++        <scope>runtime</scope>
++    </dependency>
++        
++    </dependencies>
++
++    <build>
++        <plugins>
++            <plugin>
++                <groupId>org.springframework.boot</groupId>
++                <artifactId>spring-boot-maven-plugin</artifactId>
++            </plugin>
++        </plugins>
++    </build>
++</project>
+diff --git a/src/main/java/com/example/studentcrud/StudentCrudApplication.java b/src/main/java/com/example/studentcrud/StudentCrudApplication.java
+new file mode 100644
+index 0000000..4bac0c9
+--- /dev/null
++++ b/src/main/java/com/example/studentcrud/StudentCrudApplication.java
+@@ -0,0 +1,11 @@
++package com.example.studentcrud;
++
++import org.springframework.boot.SpringApplication;
++import org.springframework.boot.autoconfigure.SpringBootApplication;
++
++@SpringBootApplication
++public class StudentCrudApplication {
++    public static void main(String[] args) {
++        SpringApplication.run(StudentCrudApplication.class, args);
++    }
++}
+diff --git a/src/main/java/com/example/studentcrud/controller/StudentController.java b/src/main/java/com/example/studentcrud/controller/StudentController.java
+new file mode 100644
+index 0000000..affe6ee
+--- /dev/null
++++ b/src/main/java/com/example/studentcrud/controller/StudentController.java
+@@ -0,0 +1,42 @@
++package com.example.studentcrud.controller;
++
++import com.example.studentcrud.model.Student;
++import com.example.studentcrud.service.StudentService;
++import org.springframework.web.bind.annotation.*;
++
++import java.util.List;
++
++@RestController
++@RequestMapping("/students")
++public class StudentController {
++    private final StudentService service;
++
++    public StudentController(StudentService service) {
++        this.service = service;
++    }
++
++    @GetMapping
++    public List<Student> getAllStudents() {
++        return service.getAllStudents();
++    }
++
++    @GetMapping("/{id}")
++    public Student getStudent(@PathVariable Long id) {
++        return service.getStudentById(id);
++    }
++
++    @PostMapping
++    public Student addStudent(@RequestBody Student student) {
++        return service.saveStudent(student);
++    }
++
++    @PutMapping("/{id}")
++    public Student updateStudent(@PathVariable Long id, @RequestBody Student student) {
++        return service.updateStudent(id, student);
++    }
++
++    @DeleteMapping("/{id}")
++    public void deleteStudent(@PathVariable Long id) {
++        service.deleteStudent(id);
++    }
++}
+diff --git a/src/main/java/com/example/studentcrud/model/Student.java b/src/main/java/com/example/studentcrud/model/Student.java
+new file mode 100644
+index 0000000..5eded0a
+--- /dev/null
++++ b/src/main/java/com/example/studentcrud/model/Student.java
+@@ -0,0 +1,34 @@
++package com.example.studentcrud.model;
++
++import jakarta.persistence.*;
++
++@Entity
++public class Student {
++    @Id
++    @GeneratedValue(strategy = GenerationType.IDENTITY)
++    private Long id;
++
++    private String name;
++    private String email;
++    private int age;
++
++    public Student() {}
++
++    public Student(String name, String email, int age) {
++        this.name = name;
++        this.email = email;
++        this.age = age;
++    }
++
++    public Long getId() { return id; }
++    public void setId(Long id) { this.id = id; }
++
++    public String getName() { return name; }
++    public void setName(String name) { this.name = name; }
++
++    public String getEmail() { return email; }
++    public void setEmail(String email) { this.email = email; }
++
++    public int getAge() { return age; }
++    public void setAge(int age) { this.age = age; }
++}
+diff --git a/src/main/java/com/example/studentcrud/repository/StudentRepository.java b/src/main/java/com/example/studentcrud/repository/StudentRepository.java
+new file mode 100644
+index 0000000..bac54c6
+--- /dev/null
++++ b/src/main/java/com/example/studentcrud/repository/StudentRepository.java
+@@ -0,0 +1,7 @@
++package com.example.studentcrud.repository;
++
++import com.example.studentcrud.model.Student;
++import org.springframework.data.jpa.repository.JpaRepository;
++
++public interface StudentRepository extends JpaRepository<Student, Long> {
++}
+diff --git a/src/main/java/com/example/studentcrud/service/StudentService.java b/src/main/java/com/example/studentcrud/service/StudentService.java
+new file mode 100644
+index 0000000..09f2718
+--- /dev/null
++++ b/src/main/java/com/example/studentcrud/service/StudentService.java
+@@ -0,0 +1,43 @@
++package com.example.studentcrud.service;
++
++import com.example.studentcrud.model.Student;
++import com.example.studentcrud.repository.StudentRepository;
++import org.springframework.stereotype.Service;
++
++import java.util.List;
++
++@Service
++public class StudentService {
++    private final StudentRepository repository;
++
++    public StudentService(StudentRepository repository) {
++        this.repository = repository;
++    }
++
++    public List<Student> getAllStudents() {
++        return repository.findAll();
++    }
++
++    public Student getStudentById(Long id) {
++        return repository.findById(id).orElse(null);
++    }
++
++    public Student saveStudent(Student student) {
++        return repository.save(student);
++    }
++
++    public Student updateStudent(Long id, Student student) {
++        Student existing = repository.findById(id).orElse(null);
++        if (existing != null) {
++            existing.setName(student.getName());
++            existing.setEmail(student.getEmail());
++            existing.setAge(student.getAge());
++            return repository.save(existing);
++        }
++        return null;
++    }
++
++    public void deleteStudent(Long id) {
++        repository.deleteById(id);
++    }
++}
+diff --git a/src/main/resources/application.properties b/src/main/resources/application.properties
+new file mode 100644
+index 0000000..75fbb97
+--- /dev/null
++++ b/src/main/resources/application.properties
+@@ -0,0 +1,7 @@
++spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
++spring.datasource.url=jdbc:mysql://localhost:3306/studentcrud
++spring.datasource.username=root
++spring.datasource.password=6263822818@123
++spring.jpa.show-sql=true
++spring.jpa.database-platform=org.hibernate.dialect.MySQL8Dialect
++spring.jpa.hibernate.ddl-auto=update
