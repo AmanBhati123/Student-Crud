@@ -1,12 +1,12 @@
-# Base image with Java 17 (use same JDK version as project)
-FROM openjdk:17-jdk-slim
+# Stage 1: Build the app using Maven
+FROM maven:3.8.3-openjdk-17 AS build
+WORKDIR /app
+COPY . .
+RUN mvn clean package -DskipTests
 
-# Copy jar file into container
-ARG JAR_FILE=target/student-crud-0.0.1-SNAPSHOT.jar
-COPY ${JAR_FILE} app.jar
-
-# Expose port
+# Stage 2: Run the app with JDK
+FROM eclipse-temurin:17-jdk
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8080
-
-# Run the application
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
